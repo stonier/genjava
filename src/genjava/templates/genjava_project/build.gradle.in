@@ -49,7 +49,7 @@ ext {
 task generateSources (type: JavaExec) {
     description = "Generate sources for %(project_name)s"
     outputs.dir(file(generated_sources_directory))
-    args = new ArrayList<String>([generated_sources_directory, '--package-path=%(pkg_directory)s', '%(project_name)s'])
+    args = new ArrayList<String>(['--output-path', generated_sources_directory, '--package-path' ,'%(pkg_directory)s', '--package-names' ,'%(project_name)s'])
     classpath = configurations.runtime
     main = 'org.ros.internal.message.GenerateInterfaces'
     tasks.compileJava.source outputs.files
@@ -61,6 +61,7 @@ dependencies {
 }
 
 jar {
+    from sourceSets.main.output.classesDir
     manifest = osgiManifest {
         classesDir = sourceSets.main.output.classesDir
         classpath = configurations.runtime
