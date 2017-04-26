@@ -52,14 +52,16 @@ macro(_generate_module_java ARG_PKG ARG_GEN_OUTPUT_DIR ARG_GENERATED_FILES)
     # So we leave this dropping to inform it when gradle needs to run so that we can skip by
     # without the huge latency whenever we don't.
     set(DROPPINGS_FILE "${GRADLE_BUILD_DIR}/${ARG_PKG}/droppings")
-    add_custom_command(OUTPUT ${GRADLE_BUILD_FILE}
+    if ( NOT "${ARG_GENERATED_FILES}" STREQUAL "" )
+      add_custom_command(OUTPUT ${GRADLE_BUILD_FILE}
         DEPENDS ${GENJAVA_BIN} ${ARG_GENERATED_FILES}
         COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENJAVA_BIN}
             -o ${GRADLE_BUILD_DIR}
             -p ${ARG_PKG}
         COMMAND touch ${DROPPINGS_FILE}
         COMMENT "Generating Java gradle project from ${ARG_PKG}"
-    )
+        )
+    endif()
 
     ################################
     # Compile Gradle Subproject

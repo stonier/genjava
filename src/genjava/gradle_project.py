@@ -116,14 +116,21 @@ def create_msg_package_index():
     # this is inconvenient since it would always mean we should bump the version number in an overlay
     # when all that is necessary is for it to recognise that it is in an overlay
     # ros_paths = rospkg.get_ros_paths()
+
+    r = rospkg.RosPack()
+
     package_index = {}
     ros_paths = rospkg.get_ros_package_path()
     ros_paths = [x for x in ros_paths.split(':') if x]
     # packages that don't properly identify themselves as message packages (fix upstream).
     for path in reversed(ros_paths):  # make sure we pick up the source overlays last
         for unused_package_path, package in find_packages(path).items():
-            if ('message_generation' in [dep.name for dep in package.build_depends] or
-                'genmsg' in [dep.name for dep in package.build_depends] or
+            try:
+                depends = r.get_depends(package.name)
+            except : # get_depends fails for metapackage
+                depends = []
+            if ('message_generation' in depends or
+                'genmsg' in depends or
                 package.name in rosjava_build_tools.catkin.message_package_whitelist):
 #                 print(package.name)
 #                 print("  version: %s" % package.version)
