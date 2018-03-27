@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 %(author)s
+ * Copyright (C) 2014, 2018 %(author)s
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -53,6 +53,30 @@ task generateSources (type: JavaExec) {
     classpath = configurations.runtime
     main = 'org.ros.internal.message.GenerateInterfaces'
     tasks.compileJava.source outputs.files
+}
+
+task docsJar(type: Jar, dependsOn: 'javadoc') {
+  description = 'Archive JavaDoc for %(project_name)s'
+  from javadoc.destinationDir
+  classifier = 'javadoc'
+}
+
+task sourceJar(type: Jar, dependsOn: 'classes') {
+  description = 'Archive Source files for %(project_name)s'
+  from sourceSets.main.allSource
+  classifier = 'sources'
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      // compiled classes jar is published to maven by default
+      // also publish -sources.jar
+      artifact sourceJar
+      // also publish -javadoc.jar
+      artifact docsJar
+    }
+  }
 }
 
 dependencies {
