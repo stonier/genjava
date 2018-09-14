@@ -30,19 +30,35 @@ macro(generate_rosjava_messages)
     message(FATAL_ERROR "generate_rosjava_messages() called with unused arguments: ${ARG_UNPARSED_ARGUMENTS}")
   endif()
   catkin_rosjava_env_setup()
+  message(STATUS "ROS_GRADLE_VERBOSE: ${ROS_GRADLE_VERBOSE}")
+  message(STATUS "ROS_MAVEN_DEPLOYMENT_REPOSITORY: ${ROS_MAVEN_DEPLOYMENT_REPOSITORY}")
+  message(STATUS "ROS_MAVEN_REPOSITORY: ${ROS_MAVEN_REPOSITORY}")
+  message(STATUS "GRADLE_USER_HOME: ${GRADLE_USER_HOME}")
   set(ROS_GRADLE_VERBOSE $ENV{ROS_GRADLE_VERBOSE})
   if(ROS_GRADLE_VERBOSE)
       set(verbosity "--verbosity")
   else()
       set(verbosity "")
   endif()
+  set(avoid_rebuilding "")
+  #set(avoid_rebuilding "--avoid-rebuilding")
   string(REPLACE ";" " " package_list "${ARG_PACKAGES}")
 
+  message(STATUS "#### ${PROJECT_NAME}_generate_artifacts ####")
+  message(STATUS "PROJECT_NAME: ${PROJECT_NAME}")
+  message(STATUS "CATKIN_ENV: ${CATKIN_ENV}")
+  message(STATUS "PYTHON_EXECUTABLE: ${PYTHON_EXECUTABLE}")
+  message(STATUS "GENJAVA_MESSAGE_ARTIFACTS_BIN: ${GENJAVA_MESSAGE_ARTIFACTS_BIN}")
+  message(STATUS "verbosity: ${verbosity}")
+  message(STATUS "avoid_rebuilding: ${avoid_rebuilding}")
+  message(STATUS "CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR}")
+  message(STATUS "ARG_PACKAGES: ${ARG_PACKAGES}")
+  message(STATUS "package_list: ${package_list}")
   add_custom_target(${PROJECT_NAME}_generate_artifacts
     ALL
     COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENJAVA_MESSAGE_ARTIFACTS_BIN}
         ${verbosity}
-        --avoid-rebuilding
+        ${avoid_rebuilding}
         -o ${CMAKE_CURRENT_BINARY_DIR}
         -p ${ARG_PACKAGES} # this has to be a list argument so it separates each arg (not a single string!)
     DEPENDS

@@ -77,7 +77,7 @@ def main(argv):
     changed and so forth.
     '''
     args = parse_arguments(argv[1:])
-    #print("genjava %s/%s" % (args.package, args.message))
+    print("genjava.main %s" % (args))
     if not args.compile:
         gradle_project.create(args.package, args.output_dir)
     else:
@@ -88,7 +88,7 @@ def standalone_parse_arguments(argv):
     parser = argparse.ArgumentParser(description='Generate artifacts for any/all discoverable message packages.')
     parser.add_argument('-p', '--packages', action='store', nargs='*', default=[], help='a list of packages to generate artifacts for')
     parser.add_argument('-o', '--output-dir', action='store', default='build', help='output directory for the java code (e.g. build/foo_msgs)')
-    parser.add_argument('-v', '--verbose', default=False, action='store_true', help='enable verbosity in debugging (false)')
+    parser.add_argument('-v', '--verbosity', default=False, action='store_true', help='enable verbosity in debugging (false)')
     parser.add_argument('-f', '--fakeit', default=False, action='store_true', help='dont build, just list the packages it would build (false)')
     parser.add_argument('-a', '--avoid-rebuilding', default=False, action='store_true', help='avoid rebuilding if the working directory is already present (false)')
     parsed_arguments = parser.parse_args(argv)
@@ -102,7 +102,7 @@ def standalone_main(argv):
     generate artifacts for.
     '''
     args = standalone_parse_arguments(argv[1:])
-    #print("genjava %s/%s/%s" % (args.package, args.output_dir, args.verbose))
+    print("genjava.standalone_main %s" % (args))
 
     sorted_package_tuples = rosjava_build_tools.catkin.index_message_package_dependencies_from_local_environment(package_name_list=args.packages)
 
@@ -111,7 +111,7 @@ def standalone_main(argv):
     did_not_rebuild_these_packages = []
     if not args.fakeit:
         for unused_relative_path, p in sorted_package_tuples:
-            result = gradle_project.standalone_create_and_build(p.name, args.output_dir, args.verbose, args.avoid_rebuilding)
+            result = gradle_project.standalone_create_and_build(p.name, args.output_dir, args.verbosity, args.avoid_rebuilding)
             if not result:
                 did_not_rebuild_these_packages.append(p.name)
     if did_not_rebuild_these_packages:
