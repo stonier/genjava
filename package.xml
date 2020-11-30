@@ -1,4 +1,8 @@
-<package format="2">
+<?xml version="1.0"?>
+<?xml-model
+  href="http://download.ros.org/schema/package_format3.xsd"
+  schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
   <name>genjava</name>
   <version>0.3.4</version>
   <description>
@@ -16,9 +20,14 @@
   <author>Daniel Stonier</author>
 
   <buildtool_depend version_gte="0.5.78">catkin</buildtool_depend>
+  <buildtool_depend condition="$ROS_PYTHON_VERSION == 2">python-setuptools</buildtool_depend>
+  <buildtool_depend condition="$ROS_PYTHON_VERSION == 3">python3-setuptools</buildtool_depend>
+
   <depend>genmsg</depend>
-  <depend>python-catkin-pkg</depend>
-  <depend>python-rospkg</depend>
+  <depend condition="$ROS_PYTHON_VERSION == 2">python-catkin-pkg</depend>
+  <depend condition="$ROS_PYTHON_VERSION == 2">python-rospkg</depend>
+  <depend condition="$ROS_PYTHON_VERSION == 3">python3-catkin-pkg</depend>
+  <depend condition="$ROS_PYTHON_VERSION == 3">python3-rospkg</depend>
   <depend>rosjava_bootstrap</depend>
   <depend>rosjava_build_tools</depend>
 
