@@ -79,7 +79,7 @@ def get_templates():
 
 def populate_project(project_name, project_version, pkg_directory, gradle_project_dir, msg_dependencies):
     author = author_name()
-    for filename, template in get_templates().iteritems():
+    for filename, template in get_templates().items():
         contents = instantiate_genjava_template(template, project_name, project_version, pkg_directory, author, msg_dependencies)
         try:
             p = os.path.abspath(os.path.join(gradle_project_dir, filename))
@@ -152,6 +152,7 @@ def create(msg_pkg_name, output_dir):
         raise IOError("could not find %s among message packages. Does the package have a <build_depend> on message_generation in its package.xml?" % msg_pkg_name)
 
     msg_dependencies = create_dependency_string(msg_pkg_name, msg_package_index)
+    print("msg_dependencies: %s" %msg_dependencies)
 
     create_gradle_wrapper(genjava_gradle_dir)
     pkg_directory = os.path.abspath(os.path.dirname(msg_package_index[msg_pkg_name].filename))
@@ -171,7 +172,7 @@ def build(msg_pkg_name, output_dir, verbosity):
     cmd = ['./gradlew']
     if not verbosity:
         cmd.append('--quiet')
-    #print("COMMAND........................%s" % cmd)
+    print("COMMAND build ........................%s" % cmd)
     subprocess.call(cmd, stderr=subprocess.STDOUT,)
 
 
@@ -195,6 +196,6 @@ def standalone_create_and_build(msg_pkg_name, output_dir, verbosity, avoid_rebui
     cmd = [gradle_wrapper, '-p', working_directory]
     if not verbosity:
         cmd.append('--quiet')
-    #print("COMMAND........................%s" % cmd)
+    print("COMMAND standalone_create_and_build ........................%s" % cmd)
     subprocess.call(cmd, stderr=subprocess.STDOUT,)
     return True

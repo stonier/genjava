@@ -114,4 +114,4 @@ task bugfixtask {
 
 jar.dependsOn(bugfixtask)
 
-defaultTasks 'publish'
+defaultTasks 'publish', 'install', 'info'
