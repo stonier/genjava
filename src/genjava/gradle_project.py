@@ -79,7 +79,7 @@ def get_templates():
 
 def populate_project(project_name, project_version, pkg_directory, gradle_project_dir, msg_dependencies):
     author = author_name()
-    for filename, template in get_templates().iteritems():
+    for filename, template in get_templates().items():
         contents = instantiate_genjava_template(template, project_name, project_version, pkg_directory, author, msg_dependencies)
         try:
             p = os.path.abspath(os.path.join(gradle_project_dir, filename))
